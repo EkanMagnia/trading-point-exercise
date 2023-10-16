@@ -11,15 +11,15 @@ use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Validator\Constraints\GreaterThanOrEqual;
+use Symfony\Component\Validator\Constraints\LessThanOrEqual;
 
 class QuoteFilterType extends AbstractType
 {
 
     public function __construct(
         public NasdaqListingService $nasdaqListingService
-    )
-    {
-    }
+    ) {}
 
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
@@ -32,10 +32,26 @@ class QuoteFilterType extends AbstractType
                 ]
             )
             ->add('startDate', DateType::class, [
-                'widget' => 'single_text'
+                'widget' => 'single_text',
+                'constraints' => [
+                    new LessThanOrEqual([
+                        'propertyPath' => 'parent.all[endDate].data'
+                    ])
+                ],
+                'attr' => [
+                    'class' => 'datepicker'
+                ]
             ])
             ->add('endDate', DateType::class, [
-                'widget' => 'single_text'
+                'widget' => 'single_text',
+                'constraints' => [
+                    new GreaterThanOrEqual([
+                        'propertyPath' => 'parent.all[startDate].data'
+                    ])
+                ],
+                'attr' => [
+                    'class' => 'datepicker'
+                ]
             ])
             ->add('email', EmailType::class);
     }

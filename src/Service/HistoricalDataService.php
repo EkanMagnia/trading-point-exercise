@@ -9,13 +9,14 @@ class HistoricalDataService
 {
     public function __construct(
         private HttpClientInterface $client,
-        private string $historicalDataAPI,
-        private string $XRapidAPIKey,
-        private string $XRapidAPIHost
-    ) {
+        private string              $historicalDataAPI,
+        private string              $XRapidAPIKey,
+        private string              $XRapidAPIHost
+    )
+    {
     }
 
-    public function fetchData(QuoteFilter $quoteFilter)
+    public function fetchData(QuoteFilter $quoteFilter): array
     {
         $response = $this->client->request(
             'GET',
@@ -31,7 +32,23 @@ class HistoricalDataService
             ]
         );
 
-        //TODO filter and keep only the data between the input dates
-        return $response->toArray();
+        $apiData = $response->toArray();
+
+        return $this->filterResults($apiData, $quoteFilter);
+    }
+
+    public function filterResults(array $apiData, QuoteFilter $quoteFilter): array
+    {
+        $startDate = $quoteFilter->getStartDate()->getTimestamp();
+        $endDate = $quoteFilter->getEndDate()->getTimestamp();
+
+        $results = [];
+        foreach ($apiData['prices'] as $price) {
+            if ($price['date'] >= $startDate && $price['date'] <= $endDate) {
+                $results[] = $price;
+            }
+        }
+
+        return $results;
     }
 }

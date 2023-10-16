@@ -11,7 +11,7 @@
     <button class="btn btn-primary">{{ button_label|default('Search') }}</button>
     {{ form_end(form) }}
 
-    {% if historicalData is not empty and historicalData.prices is not empty %}
+    {% if historicalData is not empty %}
 
         <table>
             <thead>
@@ -25,7 +25,7 @@
             </tr>
             </thead>
             <tbody>
-            {% for price in historicalData.prices %}
+            {% for price in historicalData %}
                 <tr>
                     <td>{% if price.date is defined %}{{ price.date|date('d/m/Y') }}{% endif %}</td>
                     <td>{% if price.open is defined %}{{ price.open }}{% endif %}</td>
@@ -49,14 +49,14 @@
                 type: 'bar',
                 data: {
                     labels: [
-                        {% for price in historicalData.prices %}
+                        {% for price in historicalData %}
                             '{{ price.date|date('d/m/Y') }}',
                         {% endfor %}
                     ],
                     datasets: [{
                         label: 'open',
                         data: [
-                            {% for price in historicalData.prices %}
+                            {% for price in historicalData %}
                                 '{% if price.open is defined %}{{ price.open }}{% endif %}',
                             {% endfor %}
                         ],
@@ -65,7 +65,7 @@
                     {
                         label: 'close',
                         data: [
-                            {% for price in historicalData.prices %}
+                            {% for price in historicalData %}
                             {% if price.close is defined %}{{ price.close }}{% endif %},
                             {% endfor %}
                         ],
@@ -83,4 +83,12 @@
         </script>
     {% endif %}
 
+{% endblock %}
+
+{% block pageJs %}
+    <script>
+        // $( function() {
+        //     $( ".datepicker" ).datepicker();
+        // } );
+    </script>
 {% endblock %}
