@@ -6,6 +6,8 @@
 parameters:
     nasdaqListingsURL: '%env(NASDAQ_LISTINGS_URL)%'
     historicalDataAPI: '%env(HISTORICAL_DATA_API)%'
+    XRapidAPIKey: '%env(XRapidAPIKey)%'
+    XRapidAPIHost: '%env(XRapidAPIHost)%'
 
 services:
     # default configuration for services in *this* file
@@ -28,3 +30,10 @@ services:
         public: true
         arguments:
             $nasdaqListingsURL: '%nasdaqListingsURL%'
+
+    App\Service\HistoricalDataService:
+        public: true
+        arguments:
+            $historicalDataAPI: '%historicalDataAPI%'
+            $XRapidAPIKey: '%XRapidAPIKey%'
+            $XRapidAPIHost: '%XRapidAPIHost%'

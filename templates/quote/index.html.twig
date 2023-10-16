@@ -3,9 +3,39 @@
 {% block body %}
     <h1>Quotes</h1>
 
+    {% if errorMessage is not empty %}
+        {{ errorMessage }}
+    {% endif %}
     {{ form_start(form) }}
     {{ form_widget(form) }}
     <button class="btn btn-primary">{{ button_label|default('Search') }}</button>
     {{ form_end(form) }}
+
+    <table>
+        <thead>
+            <tr>
+                <td>Date</td>
+                <td>Open</td>
+                <td>High</td>
+                <td>Low</td>
+                <td>Close</td>
+                <td>Volume</td>
+            </tr>
+        </thead>
+        <tbody>
+            {% if historicalData is not empty and historicalData.prices is not empty %}
+                {% for price in historicalData.prices %}
+                    <tr>
+                        <td>{% if price.date is defined %}{{ price.date|date('d/m/Y') }}{% endif %}</td>
+                        <td>{% if price.open is defined %}{{ price.open }}{% endif %}</td>
+                        <td>{% if price.high is defined %}{{ price.high }}{% endif %}</td>
+                        <td>{% if price.low is defined %}{{ price.low }}{% endif %}</td>
+                        <td>{% if price.close is defined %}{{ price.close }}{% endif %}</td>
+                        <td>{% if price.volume is defined %}{{ price.volume }}{% endif %}</td>
+                    </tr>
+                {% endfor %}
+            {% endif %}
+        </tbody>
+    </table>
 
 {% endblock %}
