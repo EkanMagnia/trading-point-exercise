@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\QuoteFilter;
 use App\Form\QuoteFilterType;
+use App\Service\NasdaqListingService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -25,7 +26,7 @@ class QuoteController extends AbstractController
         }
 
         return $this->render('quote/index.html.twig', [
-            'form' => $form->createView(),
+            'form' => $form->createView()
         ]);
     }
 }

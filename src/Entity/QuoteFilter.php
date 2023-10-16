@@ -29,7 +29,7 @@ class QuoteFilter
      */
     #[Assert\NotBlank]
     #[Assert\Type(\DateTimeInterface::class)]
-    #[Assert\LessThanOrEqual('endDate')]
+//    #[Assert\LessThanOrEqual('endDate')]
     #[Assert\LessThanOrEqual('today')]
     private \DateTimeInterface $startDate;
 
@@ -38,7 +38,7 @@ class QuoteFilter
      */
     #[Assert\NotBlank]
     #[Assert\Type(\DateTimeInterface::class)]
-    #[Assert\GreaterThanOrEqual('startDate')]
+//    #[Assert\GreaterThanOrEqual('startDate')]
     #[Assert\LessThanOrEqual('today')]
     private \DateTimeInterface $endDate;
 
