@@ -38,6 +38,7 @@ class QuoteController extends AbstractController
                 //easy way to debug the email
                 //dd($sentMessage);
             } catch (\Throwable $throwable) {
+                dd($throwable);
                 $errorMessage = 'No data found for '.$quoteFilter->getCompanySymbol();
             }
         }
