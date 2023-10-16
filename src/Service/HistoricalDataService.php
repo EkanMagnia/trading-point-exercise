@@ -2,6 +2,7 @@
 
 namespace App\Service;
 
+use App\Entity\QuoteFilter;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 
 class HistoricalDataService
@@ -14,7 +15,7 @@ class HistoricalDataService
     ) {
     }
 
-    public function fetchData(string $companySymbol)
+    public function fetchData(QuoteFilter $quoteFilter)
     {
         $response = $this->client->request(
             'GET',
@@ -25,11 +26,12 @@ class HistoricalDataService
                     'X-RapidAPI-Host' => $this->XRapidAPIHost,
                 ],
                 'query' => [
-                    'symbol' => $companySymbol
+                    'symbol' => $quoteFilter->getCompanySymbol()
                 ]
             ]
         );
 
+        //TODO filter and keep only the data between the input dates
         return $response->toArray();
     }
 }

@@ -29,7 +29,7 @@ class QuoteController extends AbstractController
             $quoteFilter = $form->getData();
 
             try {
-                $historicalData = $historicalDataService->fetchData($quoteFilter->getCompanySymbol());
+                $historicalData = $historicalDataService->fetchData($quoteFilter);
             } catch (\Throwable $throwable) {
                 $errorMessage = 'No data found for '.$quoteFilter->getCompanySymbol();
             }

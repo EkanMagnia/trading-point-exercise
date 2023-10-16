@@ -1,4 +1,4 @@
-{%  extends 'base.html.twig' %}
+{% extends 'base.html.twig' %}
 
 {% block body %}
     <h1>Quotes</h1>
@@ -11,8 +11,10 @@
     <button class="btn btn-primary">{{ button_label|default('Search') }}</button>
     {{ form_end(form) }}
 
-    <table>
-        <thead>
+    {% if historicalData is not empty and historicalData.prices is not empty %}
+
+        <table>
+            <thead>
             <tr>
                 <td>Date</td>
                 <td>Open</td>
@@ -21,21 +23,64 @@
                 <td>Close</td>
                 <td>Volume</td>
             </tr>
-        </thead>
-        <tbody>
-            {% if historicalData is not empty and historicalData.prices is not empty %}
-                {% for price in historicalData.prices %}
-                    <tr>
-                        <td>{% if price.date is defined %}{{ price.date|date('d/m/Y') }}{% endif %}</td>
-                        <td>{% if price.open is defined %}{{ price.open }}{% endif %}</td>
-                        <td>{% if price.high is defined %}{{ price.high }}{% endif %}</td>
-                        <td>{% if price.low is defined %}{{ price.low }}{% endif %}</td>
-                        <td>{% if price.close is defined %}{{ price.close }}{% endif %}</td>
-                        <td>{% if price.volume is defined %}{{ price.volume }}{% endif %}</td>
-                    </tr>
-                {% endfor %}
-            {% endif %}
-        </tbody>
-    </table>
+            </thead>
+            <tbody>
+            {% for price in historicalData.prices %}
+                <tr>
+                    <td>{% if price.date is defined %}{{ price.date|date('d/m/Y') }}{% endif %}</td>
+                    <td>{% if price.open is defined %}{{ price.open }}{% endif %}</td>
+                    <td>{% if price.high is defined %}{{ price.high }}{% endif %}</td>
+                    <td>{% if price.low is defined %}{{ price.low }}{% endif %}</td>
+                    <td>{% if price.close is defined %}{{ price.close }}{% endif %}</td>
+                    <td>{% if price.volume is defined %}{{ price.volume }}{% endif %}</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+
+        <div>
+            <canvas id="myChart"></canvas>
+        </div>
+
+        <script>
+            const ctx = document.getElementById('myChart');
+
+            new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: [
+                        {% for price in historicalData.prices %}
+                            '{{ price.date|date('d/m/Y') }}',
+                        {% endfor %}
+                    ],
+                    datasets: [{
+                        label: 'open',
+                        data: [
+                            {% for price in historicalData.prices %}
+                                '{% if price.open is defined %}{{ price.open }}{% endif %}',
+                            {% endfor %}
+                        ],
+                        borderWidth: 1
+                    },
+                    {
+                        label: 'close',
+                        data: [
+                            {% for price in historicalData.prices %}
+                            {% if price.close is defined %}{{ price.close }}{% endif %},
+                            {% endfor %}
+                        ],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+        </script>
+    {% endif %}
 
 {% endblock %}
