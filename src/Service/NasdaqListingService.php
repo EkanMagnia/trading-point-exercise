@@ -4,11 +4,15 @@ namespace App\Service;
 
 use App\DTO\API\NasdaqListingDTO;
 use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Component\Cache\Adapter\FilesystemAdapter;
+use Symfony\Contracts\Cache\ItemInterface;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 
 class NasdaqListingService
 {
-    public function __construct(private HttpClientInterface $client, private string $nasdaqListingsURL) {}
+    public function __construct(private HttpClientInterface $client, private string $nasdaqListingsURL)
+    {
+    }
 
     public function fetchListings(): \Generator
     {
@@ -49,10 +53,14 @@ class NasdaqListingService
 
     private function fetchData(): array
     {
-        $response = $this->client->request(
-            'GET',
-            $this->nasdaqListingsURL
-        );
-        return $response->toArray();
+        $cache = new FilesystemAdapter();
+        return $cache->get('listings', function (ItemInterface $item): array {
+            $item->expiresAfter(10);
+            $response = $this->client->request(
+                'GET',
+                $this->nasdaqListingsURL
+            );
+            return $response->toArray();
+        });
     }
 }
