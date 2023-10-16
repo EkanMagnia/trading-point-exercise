@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use App\Repository\QuoteFilterRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass=QuoteFilterRepository::class)
@@ -20,22 +21,33 @@ class QuoteFilter
     /**
      * @ORM\Column(type="string", length=100)
      */
-    private $companySymbol;
+    #[Assert\NotBlank]
+    private string $companySymbol;
 
     /**
-     * @ORM\Column(type="datetime", nullable=true)
+     * @ORM\Column(type="datetime", nullable=false)
      */
-    private $startDate;
+    #[Assert\NotBlank]
+    #[Assert\Type(\DateTimeInterface::class)]
+    #[Assert\LessThanOrEqual('endDate')]
+    #[Assert\LessThanOrEqual('today')]
+    private \DateTimeInterface $startDate;
 
     /**
-     * @ORM\Column(type="datetime", nullable=true)
+     * @ORM\Column(type="datetime", nullable=false)
      */
-    private $endDate;
+    #[Assert\NotBlank]
+    #[Assert\Type(\DateTimeInterface::class)]
+    #[Assert\GreaterThanOrEqual('startDate')]
+    #[Assert\LessThanOrEqual('today')]
+    private \DateTimeInterface $endDate;
 
     /**
      * @ORM\Column(type="string", length=100)
      */
-    private $email;
+    #[Assert\NotBlank]
+    #[Assert\Email]
+    private string $email;
 
     public function getId(): ?int
     {
