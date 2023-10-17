@@ -5,7 +5,6 @@ namespace App\Controller;
 use App\Entity\QuoteFilter;
 use App\Form\QuoteFilterType;
 use App\Service\HistoricalDataService;
-use App\Service\NasdaqListingService;
 use App\Service\NotificationService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -36,9 +35,8 @@ class QuoteController extends AbstractController
                 $historicalData = $historicalDataService->fetchData($quoteFilter);
                 $sentMessage = $notificationService->sendEmail($quoteFilter);
                 //easy way to debug the email
-                //dd($sentMessage);
+//                dd($sentMessage);
             } catch (\Throwable $throwable) {
-//                dd($throwable);
                 $errorMessage = 'No data found for '.$quoteFilter->getCompanySymbol();
             }
         }

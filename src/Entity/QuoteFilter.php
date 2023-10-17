@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Repository\QuoteFilterRepository;
+use App\Validator\ValidSymbol;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -22,6 +23,7 @@ class QuoteFilter
      * @ORM\Column(type="string", length=100)
      */
     #[Assert\NotBlank]
+    #[ValidSymbol]
     private string $companySymbol;
 
     /**
